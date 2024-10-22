@@ -21,7 +21,7 @@ export async function fetchCompanyData() {
     } catch (err: any) {
       //console.log("erro data: ", err)
       if (err.response.data) return err.response.data
-  
+
       // return err.response.data.error
     }
   }
@@ -188,12 +188,13 @@ export const editUser = async (formData: FormData) => {
   const active = is_active === "Ativo" ? true : false
 
   try {
-    await api.put(`/company-user?user_id=${user_id}&business_document=${session?.user.document}`, {
+    const response = await api.put(`/company-user?user_id=${user_id}&business_document=${session?.user.document}`, {
       password,
       permissions: parsedPermissions,
       is_active: active
     })
 
+    console.log('response: ', response.data)
   } catch (err: any) {
     if (err.response.data) return err.response.data
 
@@ -235,20 +236,17 @@ export const fetchCompanyUserDetails = async () => {
   }
 }
 
+//Company Details
 export const updateCompanyUserDetails = async (formData: FormData) => {
+  console.log({formData})
   const api = await setupAPIClient()
   const session = await auth()
-
   let { name, user_name, document, new_password, confirm_password } = Object.fromEntries(formData)
+
 
   if (session) {
 
     if (session.user.status === 'pending_password') {
-
-      if (session.user.document) {
-        document = session.user.document
-      }
-
       const result = userInfoSchemaFirstSignIn.safeParse({
         name,
         user_name,
@@ -263,9 +261,10 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
 
       try {
 
-        const response = await api.patch(`/company-user?user_id=${session.user.uuid}`, {
-          name: name,
-          user_name: user_name,
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
           document: document,
           password: new_password,
           status: 'active'
@@ -275,9 +274,9 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         return { status: response.status, data: response.data }
 
       } catch (err: any) {
-        if (err.response.data) return err.response.data
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: '', data: '' }
 
-        console.log("Erro ao atualizar dados do usuário: ", err)
       }
 
     } else {
@@ -289,15 +288,15 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         confirm_password
       })
 
-
       if (!result.success) {
         return { error: result.error.issues }
       }
 
       try {
-        const response = await api.patch(`/company-user?user_id=${session.user.uuid}`, {
-          name: name,
-          user_name: user_name,
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
           document: document,
           password: new_password,
         })
@@ -306,14 +305,15 @@ export const updateCompanyUserDetails = async (formData: FormData) => {
         return { status: response.status, data: response.data }
 
       } catch (err: any) {
-        if (err.response.data) return err.response.data
-        console.log("Erro ao atualizar dados: ", err)
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: "", data: "" }
 
       }
     }
 
   }
 }
+
 
 export const createContract = async (formData: FormData) => {
   const api = await setupAPIClient()
@@ -369,4 +369,3 @@ export const updateSession = async () => {
     }
   })
 }
-

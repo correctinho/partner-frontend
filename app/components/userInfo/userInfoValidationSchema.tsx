@@ -2,14 +2,9 @@ import { z } from "zod";
 
 
 export const userInfoSchemaFirstSignIn = z.object({
-    document: z
-        .string()
-        .min(13, { message: "Este campo é obrigatório" })
-        .trim()
-        .transform((value) => value.replace(/[^\d]/g, '')),
     new_password: z
         .string()
-        .min(1, { message: "Este campo é obrigatório" }),
+        .min(6, { message: "Senha deve ter no mínimo 6 caracteres" }),
     confirm_password: z
         .string()
 

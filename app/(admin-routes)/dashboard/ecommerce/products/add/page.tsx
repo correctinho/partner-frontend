@@ -4,7 +4,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import styles from "./addProduct.module.css"
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { selectStyle } from "@/app/components/ui/input";
+import { selectStyle } from "@/app/components/rightbar/ui/input";
 import Select from 'react-select'
 import { ProductTypes, productsDefaultValues } from "@/app/utils/formsOptions/ecommerce/ecommerce-types";
 

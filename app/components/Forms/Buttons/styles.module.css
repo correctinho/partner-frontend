@@ -1,0 +1,28 @@
+/* styles.module.css */
+
+.button {
+  background-color: var(--text);
+  padding: 10px;
+  border-radius: 5px;
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonText {
+  margin-left: 8px; /* Adiciona espaço entre o ícone e o texto */
+}
+
+.loader {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}

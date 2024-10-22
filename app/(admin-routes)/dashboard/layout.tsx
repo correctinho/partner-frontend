@@ -9,32 +9,32 @@ import { FaChevronLeft } from "react-icons/fa6"
 
 
 interface LayoutProps {
-    children: ReactNode
+  children: ReactNode
 }
 
-const Layout = async ({children}: LayoutProps) => {
-   
-    return(
-   
-        <div className={styles.container}>
-            <input className={styles.activeSidebar} type="checkbox" id="activeSidebar" />
-            <div className={styles.menu}>
-                <SideBar />
-            </div>
-            <div className={styles.menuButton}>
-                <label htmlFor="activeSidebar">
-                    <FaChevronLeft height={8} width={2} />
-                </label>
-            </div>
-            <div className={styles.content}>
-                <NavBar />
-                <BackButton />
-                {children}
-                <Footer />
-            </div>
-           
-        </div>
-    )
+const Layout = async ({ children }: LayoutProps) => {
+
+  return (
+
+    <div className={styles.container}>
+      <input className={styles.activeSidebar} type="checkbox" id="activeSidebar" />
+      <div className={styles.menu}>
+        <SideBar />
+      </div>
+      <div className={styles.menuButton}>
+        <label htmlFor="activeSidebar">
+          <FaChevronLeft height={8} width={2} />
+        </label>
+      </div>
+      <div className={styles.content}>
+        <NavBar />
+        <BackButton />
+          {children}
+        <Footer />
+      </div>
+
+    </div>
+  )
 }
 
 export default Layout

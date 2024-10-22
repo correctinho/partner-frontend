@@ -9,6 +9,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 15px;
 }
 
 .form input,
@@ -19,9 +20,9 @@
     color: var(--text);
     border: 2px solid #2e374a;
     border-radius: 5px;
-    margin-bottom: 30px;
     width: 100%;
     margin-top: 5px;
+
 }
 
 .form input::placeholder {
@@ -71,6 +72,7 @@
 
 .errorMessage {
     color: red;
+    font-size: 1rem;
 
 }
 
@@ -83,6 +85,11 @@
 
 .passwordButton:hover {
     text-decoration: underline;
+}
+
+.buttons{
+  width: 100%;
+
 }
 
 @media screen and (max-width: 600px) {

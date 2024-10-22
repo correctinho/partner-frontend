@@ -6,7 +6,7 @@ import { salesTypeOptions, correctDeliveryOptions, distanceDelivery, freightByDi
 import { additionalDistances, ecommerceDefinitionsDefaultValues, EcommerceDefinitionsTypes } from '@/app/utils/formsOptions/ecommerce/ecommerce-types';
 
 import makeAnimated from 'react-select/animated';
-import { selectStyle } from '../../ui/input';
+import { selectStyle } from '../../rightbar/ui/input';
 import { FaTrashCan } from 'react-icons/fa6';
 import { IoIosAddCircle } from 'react-icons/io';
 
@@ -24,7 +24,7 @@ export const DefinitionsForm = () => {
         setCharCount(inputValue.length);
     };
 
-    
+
 
     return (
         <div className={styles.container}>
@@ -54,8 +54,8 @@ export const DefinitionsForm = () => {
                             onChange={(selectedOption) => setDefinitionValues({ ...definitionValues, salesType: selectedOption ? selectedOption.value : "" })}
                         />
                     </div>
-                   
-                   
+
+
                 </div>
 
                 <button className={styles.fullWidth} type="submit">Ajustar definições</button>
