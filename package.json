@@ -11,9 +11,12 @@
   "dependencies": {
     "@brazilian-utils/brazilian-utils": "^1.0.0-rc.12",
     "@hookform/resolvers": "^3.3.4",
+    "@nextui-org/modal": "^2.0.41",
+    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/tooltip": "^2.0.41",
     "axios": "^1.6.5",
     "date-fns": "^4.1.0",
-    "framer-motion": "^11.0.20",
+    "framer-motion": "^11.11.9",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.453.0",
     "next": "14.0.4",

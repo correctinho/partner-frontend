@@ -65,5 +65,3 @@ export const authConfig = {
 } satisfies NextAuthConfig;
 
 const baseURL = 'https://api-correct-vercel.vercel.app/'
-
-

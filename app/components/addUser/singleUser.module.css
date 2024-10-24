@@ -4,7 +4,7 @@
   margin-top: 2rem;
   position: relative;
   padding-top: 1rem;
-  
+
 }
 
 
@@ -63,7 +63,12 @@
 
 .form ul  li{
   list-style: none;
-  
+
+}
+
+.inputBox {
+  display: flex;
+  flex-direction: column;
 }
 
 .username::placeholder{
@@ -74,11 +79,13 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  margin-top: 1rem;
 }
 
 .switchBox > label {
   font-size: 1.2rem;
 }
+
 
 .form button{
   width: 100%;
@@ -100,3 +107,7 @@
   text-align: center;
 }
 
+.permissionType ul{
+  list-style: none;
+margin-left: .8rem;
+}

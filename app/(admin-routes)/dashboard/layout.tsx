@@ -29,7 +29,7 @@ const Layout = async ({ children }: LayoutProps) => {
       <div className={styles.content}>
         <NavBar />
         <BackButton />
-          {children}
+        {children}
         <Footer />
       </div>
 

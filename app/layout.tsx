@@ -4,6 +4,7 @@ import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import AuthWrapper from './auth_wrapper'
+import { ToolTipProviders } from './toolTipProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,13 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      
+
       <body className={inter.className}>
-        <AuthWrapper>
-          {children}
-          <ToastContainer autoClose={2000} />
-    
-        </AuthWrapper>
+        <ToolTipProviders>
+          <AuthWrapper>
+            {children}
+            <ToastContainer autoClose={2000} />
+
+          </AuthWrapper>
+        </ToolTipProviders>
 
       </body>
     </html>

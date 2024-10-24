@@ -20,7 +20,7 @@ export async function fetchCompanyData() {
       return { status: response.status, data: response.data }
     } catch (err: any) {
       //console.log("erro data: ", err)
-      if (err.response.data) return err.response.data
+      if (err.response) return err.response.data
 
       // return err.response.data.error
     }
@@ -38,7 +38,7 @@ export const fetchCompanyAddress = async (address_uuid: string) => {
     return { status: response.status, data: response.data }
   } catch (err: any) {
      console.log("erro endereço: ", err)
-    if (err.response.data) return err.response.data
+    if (err.response) return err.response.data
     // return err.response.data.error
   }
 
@@ -111,7 +111,7 @@ export const updateData = async (formData: FormData) => {
       phone_2
     })
   } catch (err: any) {
-    if (err.response.data) return err.response.data
+    if (err.response) return err.response.data
     console.log("Unable to update data", err)
 
   }
@@ -125,11 +125,12 @@ export const fetchSingleUser = async (user_uuid: string) => {
   const api = await setupAPIClient();
 
   try {
-    const response = await api.get(`/company-user?user_uuid=${user_uuid}`);
+    const response = await api.get(`/business/admin/details/user?user_uuid=${user_uuid}`);
 
-    return response.data
+    return {status: response.status, data: response.data}
+
   } catch (err: any) {
-    if (err.response.data) return err.response.data
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
     console.log({ err });
   }
 };
@@ -149,7 +150,7 @@ export const fetchCompanyUsers = async (q: string, page: any, business_info_uuid
 
     return { count: users.length, users }
   } catch (err: any) {
-    if (err.response.data) return err.response.data
+    if (err.response) return err.response.data
 
     console.log({ err });
   }
@@ -161,18 +162,17 @@ export const addUser = async (formData: FormData) => {
   const { user_name, password, permissions } = Object.fromEntries(formData)
   const parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : [];
   try {
-    await api.post("/company-user", {
+    const response = await api.post("/business/admin/register/user", {
 
       password,
       user_name,
       permissions: parsedPermissions
     })
 
-
+    return {status: response.status, data: response.data}
 
   } catch (err: any) {
-    if (err.response.data) return err.response.data
-
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
     console.log("Erro ao criar usuário", err)
   }
   revalidatePath('/dashboard/users')
@@ -181,36 +181,35 @@ export const addUser = async (formData: FormData) => {
 
 export const editUser = async (formData: FormData) => {
   const api = await setupAPIClient()
-  const session = await auth()
 
-  const { user_id, password, permissions, is_active } = Object.fromEntries(formData)
+  const { user_id, password, permissions, is_active, user_name } = Object.fromEntries(formData)
   const parsedPermissions = typeof permissions === 'string' ? JSON.parse(permissions) : [];
-  const active = is_active === "Ativo" ? true : false
+  const active = is_active === "Ativo" ? 'active': 'inactive'
 
   try {
-    const response = await api.put(`/company-user?user_id=${user_id}&business_document=${session?.user.document}`, {
+    const response = await api.patch(`/company-user?user_id=${user_id}`, {
       password,
+      user_name,
       permissions: parsedPermissions,
-      is_active: active
+      status: active
     })
 
-    console.log('response: ', response.data)
-  } catch (err: any) {
-    if (err.response.data) return err.response.data
 
-    console.log("Erro ao editar usuário: ", err)
+  } catch (err: any) {
+    if (err.response) return {data: err.response.data.error, status: err.response.status}
+    return {data: '', status: ''}
   }
   revalidatePath('/dashboard/users')
   redirect('/dashboard/users')
-
 }
 
 export const deleteUser = async (formData: FormData) => {
+  console.log('chamou')
   const api = await setupAPIClient()
 
-  const { id, business_document } = Object.fromEntries(formData)
+  const { id } = Object.fromEntries(formData)
   try {
-    await api.delete(`/company-user?user_id=${id}&business_document=${business_document}`)
+    await api.patch(`/company-user/delete?user_id=${id}`)
 
   } catch (err: any) {
     console.log("Erro ao deletar usuário: ", err)
@@ -230,7 +229,7 @@ export const fetchCompanyUserDetails = async () => {
       return userData.data
     }
   } catch (err: any) {
-    if (err.response.data) return err.response.data
+    if (err.response) return err.response.data
 
     console.log(err)
   }
@@ -335,7 +334,7 @@ export const createContract = async (formData: FormData) => {
   } catch (err: any) {
 
     console.log("Erro ao atualizar dados: ", err)
-    if (err.response.data) return err.response.data
+    if (err.response) return err.response.data
 
   }
 

@@ -3,13 +3,13 @@
 import { ReactNode } from "react";
 
 interface PrivateLayoutProps {
-    children: ReactNode
+  children: ReactNode
 }
 
 
 export default function PrivateLayout({ children }: PrivateLayoutProps) {
 
-    return <>
-        {children}
-    </>
+  return <>
+    {children}
+  </>
 }

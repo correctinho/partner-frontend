@@ -1,11 +1,10 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import styles from "./userInfo.module.css"
 import { ZodIssue, z } from 'zod'
-import { IMaskInput } from 'react-imask'
 import { updateCompanyUserDetails } from '@/app/lib/actions'
-import { signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import { MaskedCPFInput } from '../Forms/Inputs/formsInput'
