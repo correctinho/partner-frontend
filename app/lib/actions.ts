@@ -187,7 +187,7 @@ export const editUser = async (formData: FormData) => {
   const active = is_active === "Ativo" ? 'active': 'inactive'
 
   try {
-    const response = await api.patch(`/company-user?user_id=${user_id}`, {
+     await api.patch(`/company-user?user_id=${user_id}`, {
       password,
       user_name,
       permissions: parsedPermissions,
@@ -204,7 +204,6 @@ export const editUser = async (formData: FormData) => {
 }
 
 export const deleteUser = async (formData: FormData) => {
-  console.log('chamou')
   const api = await setupAPIClient()
 
   const { id } = Object.fromEntries(formData)
@@ -237,7 +236,6 @@ export const fetchCompanyUserDetails = async () => {
 
 //Company Details
 export const updateCompanyUserDetails = async (formData: FormData) => {
-  console.log({formData})
   const api = await setupAPIClient()
   const session = await auth()
   let { name, user_name, document, new_password, confirm_password } = Object.fromEntries(formData)

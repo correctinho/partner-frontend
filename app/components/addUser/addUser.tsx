@@ -23,7 +23,6 @@ const AddUserForm = () => {
     handleRemoveError('permissions')
     if (permissions.includes(permission)) {
       setPermissions(permissions.filter((r) => r !== permission));
-      console.log(permission)
     } else {
       setPermissions([...permissions, permission]);
     }
@@ -36,7 +35,6 @@ const AddUserForm = () => {
 
     if (!status) return
     const response = await addUser(formData)
-    console.log({ response })
     if (response?.status === 201) {
       router.replace("/dashboard/users")
       return
