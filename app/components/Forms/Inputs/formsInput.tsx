@@ -271,7 +271,8 @@ export function TextArea({ ...rest }: TextAreaProps) {
 TextArea.displayName = "TextArea";
 
 
-export function CurrencyInput({ name, placeholder, onValueChange, value: propValue }: CustomInputProps) {
+export function CurrencyInput({ name, placeholder, onValueChange, value: propValue, readOnly }: CustomInputProps) {
+  //console.log({propValue})
   const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -279,14 +280,20 @@ export function CurrencyInput({ name, placeholder, onValueChange, value: propVal
     }).format(value);
   };
 
-  const [displayValue, setDisplayValue] = useState<string>(
-    propValue ? formatCurrency(Number(propValue)) : "R$ 0,00"
-  );
-
   const parseCurrency = (value: string): number => {
     const cleanedValue = value.replace(/\D/g, '');
     return Number(cleanedValue) / 100;
   };
+
+  const [displayValue, setDisplayValue] = useState<string>(
+    propValue ? formatCurrency(Number(propValue)) : "R$ 0,00"
+  );
+
+  useEffect(() => {
+    if (propValue) {
+      setDisplayValue(formatCurrency(Number(propValue) / 100));
+    }
+  }, [propValue]);
 
   const handleTotalValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value;
@@ -294,11 +301,12 @@ export function CurrencyInput({ name, placeholder, onValueChange, value: propVal
 
     setDisplayValue(formatCurrency(numericValue));
 
-    // Pass the raw value multiplied by 100 to the parent component
     if (onValueChange) {
-      onValueChange((numericValue * 100).toFixed(0)); // Arredonda para o inteiro mais próximo
+      onValueChange((numericValue * 100).toFixed(0)); // Converte para string e passa para o callback
     }
   };
+
+  console.log({displayValue})
 
   return (
     <input
@@ -308,6 +316,7 @@ export function CurrencyInput({ name, placeholder, onValueChange, value: propVal
       onChange={handleTotalValueChange}
       name={name}
       className={styles.input}
+      readOnly={readOnly}
     />
   );
 }

@@ -7,8 +7,9 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { auth, update } from "./auth"
 import { userInfoSchema, userInfoSchemaFirstSignIn } from "../components/userInfo/userInfoValidationSchema"
+import { setupEcommerceAPIClient } from "../services/ecommerceApi"
 
-
+// ************* BUSINESS *************
 export async function fetchCompanyData() {
   const api = await setupAPIClient()
   const session = await auth()
@@ -43,7 +44,6 @@ export const fetchCompanyAddress = async (address_uuid: string) => {
   }
 
 }
-
 
 export const updateData = async (formData: FormData) => {
   const api = await setupAPIClient();
@@ -119,6 +119,83 @@ export const updateData = async (formData: FormData) => {
   redirect('/dashboard/settings')
 }
 
+export const updateCompanyUserDetails = async (formData: FormData) => {  const api = await setupAPIClient()
+  const session = await auth()
+  let { name, user_name, document, new_password, confirm_password } = Object.fromEntries(formData)
+
+
+  if (session) {
+
+    if (session.user.status === 'pending_password') {
+      const result = userInfoSchemaFirstSignIn.safeParse({
+        name,
+        user_name,
+        document,
+        new_password,
+        confirm_password
+      })
+      if (!result.success) {
+        return { error: result.error.issues }
+      }
+
+
+      try {
+
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
+          document: document,
+          password: new_password,
+          status: 'active'
+        })
+
+
+        return { status: response.status, data: response.data }
+
+      } catch (err: any) {
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: '', data: '' }
+
+      }
+
+    } else {
+      const result = userInfoSchema.safeParse({
+        name,
+        user_name,
+        document,
+        new_password,
+        confirm_password
+      })
+
+      if (!result.success) {
+        return { error: result.error.issues }
+      }
+
+      try {
+        const response = await api.put(`/company-admin`, {
+          uuid: session.user.uuid,
+          name: name ? name : null,
+          user_name: user_name ? user_name : null,
+          document: document,
+          password: new_password,
+        })
+
+
+        return { status: response.status, data: response.data }
+
+      } catch (err: any) {
+        if (err.response) return { status: err.response.status, data: err.response.data }
+        return { status: "", data: "" }
+
+      }
+    }
+
+  }
+}
+
+
+// ************* BUSINESS USERS *************
 
 export const fetchSingleUser = async (user_uuid: string) => {
 
@@ -234,84 +311,8 @@ export const fetchCompanyUserDetails = async () => {
   }
 }
 
-//Company Details
-export const updateCompanyUserDetails = async (formData: FormData) => {
-  const api = await setupAPIClient()
-  const session = await auth()
-  let { name, user_name, document, new_password, confirm_password } = Object.fromEntries(formData)
 
-
-  if (session) {
-
-    if (session.user.status === 'pending_password') {
-      const result = userInfoSchemaFirstSignIn.safeParse({
-        name,
-        user_name,
-        document,
-        new_password,
-        confirm_password
-      })
-      if (!result.success) {
-        return { error: result.error.issues }
-      }
-
-
-      try {
-
-        const response = await api.put(`/company-admin`, {
-          uuid: session.user.uuid,
-          name: name ? name : null,
-          user_name: user_name ? user_name : null,
-          document: document,
-          password: new_password,
-          status: 'active'
-        })
-
-
-        return { status: response.status, data: response.data }
-
-      } catch (err: any) {
-        if (err.response) return { status: err.response.status, data: err.response.data }
-        return { status: '', data: '' }
-
-      }
-
-    } else {
-      const result = userInfoSchema.safeParse({
-        name,
-        user_name,
-        document,
-        new_password,
-        confirm_password
-      })
-
-      if (!result.success) {
-        return { error: result.error.issues }
-      }
-
-      try {
-        const response = await api.put(`/company-admin`, {
-          uuid: session.user.uuid,
-          name: name ? name : null,
-          user_name: user_name ? user_name : null,
-          document: document,
-          password: new_password,
-        })
-
-
-        return { status: response.status, data: response.data }
-
-      } catch (err: any) {
-        if (err.response) return { status: err.response.status, data: err.response.data }
-        return { status: "", data: "" }
-
-      }
-    }
-
-  }
-}
-
-
+// ************* CONTRACTS *************
 export const createContract = async (formData: FormData) => {
   const api = await setupAPIClient()
   const { name, content, version, password, business_info_uuid } = Object.fromEntries(formData)
@@ -339,7 +340,6 @@ export const createContract = async (formData: FormData) => {
 
 }
 
-
 export const fetchContracts = async (business_info_uuid: string) => {
   const api = await setupAPIClient()
 
@@ -355,6 +355,20 @@ export const fetchContracts = async (business_info_uuid: string) => {
 
 }
 
+
+// ************* ECOMMERCE *************
+export const fetchCategories = async () => {
+  const api = await setupEcommerceAPIClient()
+
+  try {
+    const response = await api.get(`/categories/all`)
+    return {status: response.status, data: response.data }
+  } catch (err: any) {
+    console.log("Erro ao buscar categories: ", err)
+
+
+  }
+}
 
 export const updateSession = async () => {
   const session = await auth()
