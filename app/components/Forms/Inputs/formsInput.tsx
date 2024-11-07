@@ -272,7 +272,6 @@ TextArea.displayName = "TextArea";
 
 
 export function CurrencyInput({ name, placeholder, onValueChange, value: propValue, readOnly }: CustomInputProps) {
-  //console.log({propValue})
   const formatCurrency = (value: number): string => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -306,7 +305,6 @@ export function CurrencyInput({ name, placeholder, onValueChange, value: propVal
     }
   };
 
-  console.log({displayValue})
 
   return (
     <input

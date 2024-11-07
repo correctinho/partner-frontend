@@ -50,6 +50,7 @@
 .productBox {
   width: 300px;
   height: 300px;
+  position: relative;
 }
 .uploadedImage{
   width: 250px;
@@ -61,7 +62,7 @@
 .notFoundImage {
   width: 250px;
   height: 250px;
-  background-image: url("/noproduct.jpg");
+  background-image: url("/noproduct2.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -86,7 +87,7 @@
 .tooltipBox {
   background-color: var(--bg);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -101,4 +102,49 @@
 
 .hintMark {
   font-size: .2rem;
+}
+
+.fetchedImageBox{
+  width: 250px;
+  height: 250px;
+  position: relative;
+}
+
+.imageUploadContainer {
+  display: flex;
+}
+
+.imageUploadContainer > label {
+  display: flex;
+  gap: 1rem;
+  cursor: pointer;
+  background-color: teal;
+  border-radius: 5px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+
+}
+.fetchProductForm {
+  display: flex;
+  width: 50%;
+  gap: 5px;
+}
+
+.eanCode{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.eanCode input {
+  padding: 1rem .5rem;
+  height: 18px;
+}
+
+.fetchProductForm > button {
+  background-color: teal;
+  color: #fff;
+  border-radius: 8px;
+  padding: 1rem .5rem;
+
 }

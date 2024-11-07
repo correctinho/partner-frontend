@@ -1,0 +1,28 @@
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.dotsClass {
+  display: flex !important;
+  gap: 1rem;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+}
+.thumbnailBox {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin: 0 58px 0 58px 0;
+}
+
+.trashIcon {
+  position: absolute;
+  color: red;
+  font-size: 10px;
+  right: 0;
+  cursor: pointer;
+}

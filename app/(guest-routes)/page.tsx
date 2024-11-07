@@ -12,7 +12,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { HiIdentification } from "react-icons/hi2";
 import { MdAlternateEmail } from "react-icons/md";
 
-
+import Image from "next/image";
 export default function Home() {
   const router = useRouter()
 
@@ -74,6 +74,7 @@ export default function Home() {
 
           <div className={styles.logoTop}>
             <h2>Correct</h2>
+            {/* <Image src={`https://ggeixytstedqzounudkz.supabase.co/storage/v1/object/public/correctcards/refeicao.png`} width={200} height={200} alt="Card" /> */}
           </div>
 
           <form action={login} className={styles.formLogin}>
