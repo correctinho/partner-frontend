@@ -25,37 +25,40 @@ type AddProductPageProps = {
   categories: Category[];
 };
 
+
+
 const AddProductPage = ({ categories }: AddProductPageProps) => {
-  const [brand, setBrand] = useState('');
-  const [productTitle, setProductTitle] = useState('');
-  const [categoryUuid, setCategoryUuid] = useState('');
-  const [description, setDescription] = useState('');
-  const [productPrice, setProductPrice] = useState('');
-  const [productDiscountValue, setProductDiscountValue] = useState<number | null>(null);
-  const [productPromotionalPrice, setProductPromotionalPrice] = useState('');
-  const [imageUploads, setImageUploads] = useState<File[]>([]);
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [eanImageUrls, setEanImageUrls] = useState<string | null>(null);
-  const [eanCode, setEanCode] = useState('');
-  const [isMegaPromotion, setIsMegaPromotion] = useState(false);
-  const [stock, setStock] = useState<number | undefined>(undefined);
-  const [weight, setWeight] = useState<number | undefined>(undefined);
-  const [height, setHeight] = useState<number | undefined>(undefined);
-  const [width, setWidth] = useState<number | undefined>(undefined);
-  const [combinedImagesUrls, setCombinedImagesUrls] = useState<string[]>([])
-  const [uploadImage, setUploadImage] = useState<boolean>(true)
   const categoryOptions = categories.map(category => ({
     label: category.name,
     value: category.uuid
   }));
+
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [brand, setBrand] = useState('');
+  const [productTitle, setProductTitle] = useState('');
+  const [productPrice, setProductPrice] = useState('');
+  const [isMegaPromotion, setIsMegaPromotion] = useState(false);
+  const [productDiscountValue, setProductDiscountValue] = useState<number | null>(null);
+  const [productPromotionalPrice, setProductPromotionalPrice] = useState('');
+  const [stock, setStock] = useState<number | undefined>(undefined);
+  const [weight, setWeight] = useState<number | undefined>(undefined);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const [width, setWidth] = useState<number | undefined>(undefined);
+  const [description, setDescription] = useState('');
+
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+  const [eanImageUrls, setEanImageUrls] = useState<string | null>(null);
+  const [eanCode, setEanCode] = useState('');
+  const [combinedImagesUrls, setCombinedImagesUrls] = useState<string[]>([])
+  const [uploadImage, setUploadImage] = useState<boolean>(true)
+
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
     const file = e.target.files[0];
 
-    if(file){
-      console.log("file size: ", file.size)
+    if (file) {
       if (file.size > 3 * 1024 * 1024) {
         toast.error("Imagem muito grande");
         return
@@ -72,7 +75,6 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
       }
     }
   };
-
 
   const handleDiscountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const discountValue = parseFloat(e.target.value);
@@ -176,6 +178,21 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
       return updatedImages
     });
   };
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (combinedImagesUrls.length === 0) {
+      toast.warn("Adicione pelo menos uma imagem do seu produto.")
+      return
+    }
+    if (!selectedCategory || !brand || !productTitle || !productPrice || !productDiscountValue || !stock || !description) {
+      toast.warning("Preencha todos os campos obrigatórios *")
+      return
+    }
+
+    //cal api
+  }
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleFetchProduct} className={styles.fetchProductForm}>
@@ -185,7 +202,7 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
         </div>
         <button type="submit">Buscar</button>
       </form>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.productBox}>
           {combinedImagesUrls.length > 0 ?
             <CustomPaging images={combinedImagesUrls} onRemoveImage={handleRemoveImage} />
@@ -220,12 +237,13 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
                 options={categoryOptions}
                 styles={selectStyle}
                 name="category"
+                onChange={e => setSelectedCategory(e?.value ? e.value : '')}
               />
             </div>
           </div>
           <div className={styles.grid1}>
             <div className={styles.fieldBox}>
-              <label htmlFor="title">Marca </label>
+              <label htmlFor="title">Marca <span style={{ color: 'red' }}>*</span></label>
               <input type="text" placeholder="Marca do produto" name="brand" value={brand} onChange={(e) => setBrand(e.target.value)} />
             </div>
           </div>
@@ -241,7 +259,10 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
               <CurrencyInput
                 name="value"
                 value={productPrice}
-                onValueChange={(value) => setProductPrice(value)}
+                onValueChange={(value) => {
+                  setProductPrice(value)
+                }
+                }
               />
             </div>
             <div className={styles.fieldBox}>
@@ -313,7 +334,7 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
               </div>
             )}
             <div className={styles.fieldBox}>
-              <label htmlFor="product_price">Preço do produto com desconto</label>
+              <label htmlFor="product_price">Preço do produto com desconto <span style={{ color: 'red' }}>*</span></label>
               <CurrencyInput
                 name="promotional_price"
                 readOnly
@@ -322,27 +343,64 @@ const AddProductPage = ({ categories }: AddProductPageProps) => {
             </div>
           </div>
           <div className={styles.fieldBox}>
-            <label htmlFor="stock">Quantidade disponível (Estoque)</label>
-            <input type="number" placeholder="Digite um número" name="stock" required onChange={(e) => setStock(Number(e.target.value))} />
+            <label htmlFor="stock">Quantidade disponível (Estoque) <span style={{ color: 'red' }}>*</span></label>
+            <input type="number" placeholder="Digite um número" name="stock" value={stock} onChange={(e) => setStock(Number(e.target.value))} />
           </div>
           <div className={styles.fieldBox}>
-            <label htmlFor="weight">Peso (gramas) </label>
-            <input type="number" placeholder="Digite um número" name="weight" value={weight} onChange={(e) => setWeight(Number(e.target.value))} />
+            <label htmlFor="weight">Peso (Opcional) </label>
+            <div className={styles.measureSelectBox}>
+              <input type="number" placeholder="Digite um número" name="weight" value={weight} onChange={(e) => setWeight(Number(e.target.value))} />
+              <Select
+                placeholder="Selecione uma unidade de medida"
+                options={[
+                  { label: "g", value: 'g' },
+                  { label: "kg", value: 'kg' }
+                ]}
+                styles={selectStyle}
+                name="measuring_type"
+                defaultValue={{ label: "g", value: 'g' }}
+              />
+            </div>
           </div>
           <div className={styles.fieldBox}>
-            <label htmlFor="height">Altura (m)</label>
-            <input type="number" placeholder="Digite um número" name="height" value={height} onChange={(e) => setHeight(Number(e.target.value))} />
+            <label htmlFor="height">Altura (Opcional)</label>
+            <div className={styles.measureSelectBox}>
+              <input type="number" placeholder="Digite um número" name="height" value={height} onChange={(e) => setHeight(Number(e.target.value))} />
+              <Select
+                placeholder="Selecione uma unidade de medida"
+                options={[
+                  { label: "cm", value: 'cm' },
+                  { label: "m", value: 'm' }
+                ]}
+                styles={selectStyle}
+                name="measuring_type"
+                defaultValue={{ label: "cm", value: 'cm' }}
+              />
+            </div>
           </div>
           <div className={styles.fieldBox}>
-            <label htmlFor="width">Comprimento (m)</label>
-            <input type="number" placeholder="Digite um número" name="width" value={width} onChange={(e) => setWidth(Number(e.target.value))} />
+            <label htmlFor="width">Comprimento (Opcional)</label>
+            <div className={styles.measureSelectBox}>
+              <input type="number" placeholder="Digite um número" name="width" value={width} onChange={(e) => setWidth(Number(e.target.value))} />
+              <Select
+                placeholder="Selecione uma unidade de medida"
+                options={[
+                  { label: "cm", value: 'cm' },
+                  { label: "m", value: 'm' }
+                ]}
+                styles={selectStyle}
+                name="measuring_type"
+                defaultValue={{ label: "cm", value: 'cm' }}
+              />
+            </div>
           </div>
           <div className={styles.fieldBox}>
-            <label htmlFor="stock">Descrição do produto</label>
-            <textarea name="description" id="description" cols={30} rows={10} maxLength={200} placeholder="Descreva o seu produto. Quanto mais detalhes, melhor serão as chances de vender mais!" onChange={(e) => setDescription(e.target.value)}></textarea>
+            <label htmlFor="stock">Descrição do produto <span style={{ color: 'red' }}>*</span></label>
+            <textarea name="description" id="description" value={description} cols={30} rows={10} maxLength={200} placeholder="Descreva o seu produto. Quanto mais detalhes, melhor serão as chances de vender mais!" onChange={(e) => setDescription(e.target.value)}></textarea>
           </div>
 
           <button type="submit">Criar produto</button>
+          <p><span style={{ color: 'red' }}>*</span>:  Campos obrigatórios</p>
         </div>
       </form>
     </div>

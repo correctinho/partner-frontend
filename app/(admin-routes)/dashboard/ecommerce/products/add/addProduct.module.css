@@ -148,3 +148,12 @@
   padding: 1rem .5rem;
 
 }
+
+.measureSelectBox{
+  display: flex;
+
+}
+
+.measureSelectBox > input {
+  flex: 1;
+}
